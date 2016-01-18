@@ -1,10 +1,11 @@
 package taxjar
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"github.com/google/go-querystring/query"
 )
@@ -54,18 +55,21 @@ func (c Client) Get(url string, queryParams interface{}) ([]byte, error) {
 }
 
 func (c Client) Post(url string, params interface{}) ([]byte, error) {
-	d, _ := query.Values(params)
-	body := strings.NewReader(d.Encode())
-	req, err := http.NewRequest("POST", c.baseUri+url, body)
+	buffer := bytes.NewBuffer([]byte{})
+	if err := json.NewEncoder(buffer).Encode(params); err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", c.baseUri+url, buffer)
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Add("Authorization", "Bearer "+c.token)
 	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Type", "application/json")
 
 	if c.Debug {
-		fmt.Printf("%s %s %s\n", req.Method, req.URL, body)
+		fmt.Printf("%s %s %s\n", req.Method, req.URL, buffer)
 	}
 
 	resp, err := c.Client.Do(req)
@@ -77,6 +81,10 @@ func (c Client) Post(url string, params interface{}) ([]byte, error) {
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.Debug {
+		fmt.Printf("Response: %s\n", data)
 	}
 
 	if resp.StatusCode >= 400 {
