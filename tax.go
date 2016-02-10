@@ -18,10 +18,10 @@ type TaxList struct {
 type taxParams struct {
 	FromCountry string     `json:"from_country"`
 	FromZip     string     `json:"from_zip"`
-	FromState   string     `json:"from_state"`
-	FromCity    string     `json:"from_city"`
-	FromStreet  string     `json:"from_street"`
-	ToCountry   string     `json:"to_country"`
+	FromState   string     `json:"from_state,omitempty"`
+	FromCity    string     `json:"from_city,omitempty"`
+	FromStreet  string     `json:"from_street,omitempty"`
+	ToCountry   string     `json:"to_country,omitempty"`
 	ToZip       string     `json:"to_zip"`
 	ToState     string     `json:"to_state"`
 	Shipping    float64    `json:"shipping"`
