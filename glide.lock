@@ -1,0 +1,10 @@
+hash: 9ae0f6037d560d7800a4c63b140d55f38d77343e53c1083d216fe58b45ac81f5
+updated: 2016-02-29T12:39:36.227817614-06:00
+imports:
+- name: github.com/google/go-querystring
+  version: 6bb77fe6f42b85397288d4f6f67ac72f8f400ee7
+  subpackages:
+  - query
+- name: github.com/MDrollette/taxjar-go
+  version: c9e5d76a735242cbadad9ec5039b3bbd1d7c29bc
+devImports: []
