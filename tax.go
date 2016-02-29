@@ -5,6 +5,7 @@ type Tax struct {
 	OrderTotalAmount float64   `json:"order_total_amount"`
 	Shipping         float64   `json:"shipping"`
 	TaxableAmount    float64   `json:"taxable_amount"`
+	Rate             float64   `json:"rate"`
 	AmountToCollect  float64   `json:"amount_to_collect"`
 	HasNexus         bool      `json:"has_nexus"`
 	FreightTaxable   bool      `json:"freight_taxable"`
@@ -16,27 +17,28 @@ type TaxList struct {
 }
 
 type Address struct {
-	Street  string
-	City    string
-	State   string
-	Zip     string
-	Country string
+	Street  string `json:"street,omitempty"`
+	City    string `json:"city,omitempty"`
+	State   string `json:"state,omitempty"`
+	Zip     string `json:"zip,omitempty"`
+	Country string `json:"country,omitempty"`
 }
 
 type taxParams struct {
-	FromCountry string     `json:"from_country"`
-	FromZip     string     `json:"from_zip"`
-	FromState   string     `json:"from_state,omitempty"`
-	FromCity    string     `json:"from_city,omitempty"`
-	FromStreet  string     `json:"from_street,omitempty"`
-	ToCountry   string     `json:"to_country,omitempty"`
-	ToZip       string     `json:"to_zip"`
-	ToState     string     `json:"to_state"`
-	ToStreet    string     `json:"to_street,omitempty"`
-	ToCity      string     `json:"to_city,omitempty"`
-	Shipping    float64    `json:"shipping"`
-	Amount      float64    `json:"amount,omitempty"`
-	LineItems   []LineItem `json:"line_items,omitempty"`
+	FromCountry    string     `json:"from_country"`
+	FromZip        string     `json:"from_zip"`
+	FromState      string     `json:"from_state,omitempty"`
+	FromCity       string     `json:"from_city,omitempty"`
+	FromStreet     string     `json:"from_street,omitempty"`
+	ToCountry      string     `json:"to_country,omitempty"`
+	ToZip          string     `json:"to_zip"`
+	ToState        string     `json:"to_state"`
+	ToStreet       string     `json:"to_street,omitempty"`
+	ToCity         string     `json:"to_city,omitempty"`
+	Shipping       float64    `json:"shipping"`
+	Amount         float64    `json:"amount,omitempty"`
+	LineItems      []LineItem `json:"line_items,omitempty"`
+	NexusAddresses []Address  `json:"nexus_addresses,omitempty"`
 }
 
 type LineItem struct {
@@ -56,7 +58,7 @@ func (s *TaxService) Calculate(from, to Address, shipping, amount float64) (Tax,
 	return s.Repository.get(taxParams{
 		FromStreet:  from.Street,
 		FromCity:    from.City,
-		FromState:   from.Street,
+		FromState:   from.State,
 		FromZip:     from.Zip,
 		FromCountry: from.Country,
 		ToStreet:    to.Street,
@@ -69,20 +71,21 @@ func (s *TaxService) Calculate(from, to Address, shipping, amount float64) (Tax,
 	})
 }
 
-func (s *TaxService) CalculateItems(from, to Address, shipping float64, items []LineItem) (Tax, error) {
+func (s *TaxService) CalculateItems(from, to Address, nexuses []Address, shipping float64, items []LineItem) (Tax, error) {
 	return s.Repository.get(taxParams{
-		FromStreet:  from.Street,
-		FromCity:    from.City,
-		FromState:   from.Street,
-		FromZip:     from.Zip,
-		FromCountry: from.Country,
-		ToStreet:    to.Street,
-		ToCity:      to.City,
-		ToState:     to.State,
-		ToZip:       to.Zip,
-		ToCountry:   to.Country,
-		Shipping:    shipping,
-		LineItems:   items,
+		FromStreet:     from.Street,
+		FromCity:       from.City,
+		FromState:      from.State,
+		FromZip:        from.Zip,
+		FromCountry:    from.Country,
+		ToStreet:       to.Street,
+		ToCity:         to.City,
+		ToState:        to.State,
+		ToZip:          to.Zip,
+		ToCountry:      to.Country,
+		Shipping:       shipping,
+		LineItems:      items,
+		NexusAddresses: nexuses,
 	})
 }
 
