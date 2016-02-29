@@ -15,6 +15,14 @@ type TaxList struct {
 	Tax Tax `json:"tax"`
 }
 
+type Address struct {
+	Street  string
+	City    string
+	State   string
+	Zip     string
+	Country string
+}
+
 type taxParams struct {
 	FromCountry string     `json:"from_country"`
 	FromZip     string     `json:"from_zip"`
@@ -24,6 +32,8 @@ type taxParams struct {
 	ToCountry   string     `json:"to_country,omitempty"`
 	ToZip       string     `json:"to_zip"`
 	ToState     string     `json:"to_state"`
+	ToStreet    string     `json:"to_street,omitempty"`
+	ToCity      string     `json:"to_city,omitempty"`
 	Shipping    float64    `json:"shipping"`
 	Amount      float64    `json:"amount,omitempty"`
 	LineItems   []LineItem `json:"line_items,omitempty"`
@@ -42,68 +52,124 @@ type TaxService struct {
 }
 
 // Calculate sales Tax for a given order
-func (s *TaxService) Calculate(fromStreet, fromCity, fromState, fromZip, fromCountry, toState, toZip, toCountry string, shipping, amount float64) (Tax, error) {
+func (s *TaxService) Calculate(from, to Address, shipping, amount float64) (Tax, error) {
 	return s.Repository.get(taxParams{
-		FromStreet:  fromStreet,
-		FromCity:    fromCity,
-		FromState:   fromState,
-		FromZip:     fromZip,
-		FromCountry: fromCountry,
-		ToState:     toState,
-		ToZip:       toZip,
-		ToCountry:   toCountry,
+		FromStreet:  from.Street,
+		FromCity:    from.City,
+		FromState:   from.Street,
+		FromZip:     from.Zip,
+		FromCountry: from.Country,
+		ToStreet:    to.Street,
+		ToCity:      to.City,
+		ToState:     to.State,
+		ToZip:       to.Zip,
+		ToCountry:   to.Country,
 		Shipping:    shipping,
 		Amount:      amount,
 	})
 }
 
-func (s *TaxService) CalculateItems(fromStreet, fromCity, fromState, fromZip, fromCountry, toState, toZip, toCountry string, shipping float64, items []LineItem) (Tax, error) {
+func (s *TaxService) CalculateItems(from, to Address, shipping float64, items []LineItem) (Tax, error) {
 	return s.Repository.get(taxParams{
-		FromStreet:  fromStreet,
-		FromCity:    fromCity,
-		FromState:   fromState,
-		FromZip:     fromZip,
-		FromCountry: fromCountry,
-		ToState:     toState,
-		ToZip:       toZip,
-		ToCountry:   toCountry,
+		FromStreet:  from.Street,
+		FromCity:    from.City,
+		FromState:   from.Street,
+		FromZip:     from.Zip,
+		FromCountry: from.Country,
+		ToStreet:    to.Street,
+		ToCity:      to.City,
+		ToState:     to.State,
+		ToZip:       to.Zip,
+		ToCountry:   to.Country,
 		Shipping:    shipping,
 		LineItems:   items,
 	})
 }
 
 type TaxLineItem struct {
-	Id                           string  `json:"id"`
-	StateTaxableAmount           float64 `json:"state_taxable_amount"`
-	StateSalesTaxRate            float64 `json:"state_sales_tax_rate"`
-	CountyTaxableAmount          float64 `json:"county_taxable_amount"`
-	CountyTaxRate                float64 `json:"county_tax_rate"`
-	CityTaxableAmount            float64 `json:"city_taxable_amount"`
-	CityTaxRate                  float64 `json:"city_tax_rate"`
-	SpecialDistrictTaxableAmount float64 `json:"special_district_taxable_amount"`
-	SpecialTaxRate               float64 `json:"special_tax_rate"`
+	Id string `json:"id"`
+
+	// For US transactions
+	StateTaxableAmount   float64 `json:"state_taxable_amount"`
+	StateSalesTaxRate    float64 `json:"state_sales_tax_rate"`
+	StateAmount          float64 `json:"state_amount"`
+	CountyTaxableAmount  float64 `json:"county_taxable_amount"`
+	CountyTaxRate        float64 `json:"county_tax_rate"`
+	CountyAmount         float64 `json:"county_amount"`
+	CityTaxableAmount    float64 `json:"city_taxable_amount"`
+	CityTaxRate          float64 `json:"city_tax_rate"`
+	CityAmount           float64 `json:"city_amount"`
+	SpecialTaxableAmount float64 `json:"special_district_taxable_amount"`
+	SpecialTaxRate       float64 `json:"special_tax_rate"`
+	SpecialAmount        float64 `json:"special_district_amount"`
+
+	// For CA transactions
+	GstTaxableAmount float64 `json:"gst_taxable_amount"`
+	GstTaxRate       float64 `json:"gst_tax_rate"`
+	GstAmount        float64 `json:"gst"`
+	PstTaxableAmount float64 `json:"pst_taxable_amount"`
+	PstTaxRate       float64 `json:"pst_tax_rate"`
+	PstAmount        float64 `json:"pst"`
+	QstTaxableAmount float64 `json:"qst_taxable_amount"`
+	QstTaxRate       float64 `json:"qst_tax_rate"`
+	QstAmount        float64 `json:"qst"`
 }
 
 type Shipping struct {
-	StateAmount           float64 `json:"state_amount"`
-	StateSalesTaxRate     float64 `json:"state_sales_tax_rate"`
-	CountyAmount          float64 `json:"county_amount"`
-	CountyTaxRate         float64 `json:"county_tax_rate"`
-	CityAmount            float64 `json:"city_amount"`
-	CityTaxRate           float64 `json:"city_tax_rate"`
-	SpecialDistrictAmount float64 `json:"special_district_amount"`
-	SpecialTaxRate        float64 `json:"special_tax_rate"`
+	StateTaxableAmount   float64 `json:"state_taxable_amount"`
+	StateSalesTaxRate    float64 `json:"state_sales_tax_rate"`
+	StateAmount          float64 `json:"state_amount"`
+	CountyTaxableAmount  float64 `json:"county_taxable_amount"`
+	CountyTaxRate        float64 `json:"county_tax_rate"`
+	CountyAmount         float64 `json:"county_amount"`
+	CityTaxableAmount    float64 `json:"city_taxable_amount"`
+	CityTaxRate          float64 `json:"city_tax_rate"`
+	CityAmount           float64 `json:"city_amount"`
+	SpecialTaxableAmount float64 `json:"special_district_taxable_amount"`
+	SpecialTaxRate       float64 `json:"special_tax_rate"`
+	SpecialAmount        float64 `json:"special_district_amount"`
+
+	// For CA transactions
+	GstTaxableAmount float64 `json:"gst_taxable_amount"`
+	GstTaxRate       float64 `json:"gst_tax_rate"`
+	GstAmount        float64 `json:"gst"`
+	PstTaxableAmount float64 `json:"pst_taxable_amount"`
+	PstTaxRate       float64 `json:"pst_tax_rate"`
+	PstAmount        float64 `json:"pst"`
+	QstTaxableAmount float64 `json:"qst_taxable_amount"`
+	QstTaxRate       float64 `json:"qst_tax_rate"`
+	QstAmount        float64 `json:"qst"`
 }
 
 type Breakdown struct {
-	Shipping                      Shipping      `json:"shipping"`
-	LineItems                     []TaxLineItem `json:"line_items"`
-	StateTaxableAmount            float64       `json:"state_taxable_amount"`
-	StateTaxCollectable           float64       `json:"state_tax_collectable"`
-	CountyTaxableAmount           float64       `json:"county_taxable_amount"`
-	CountyTaxCollectable          float64       `json:"county_tax_collectable"`
-	CityTaxableAmount             float64       `json:"city_taxable_amount"`
-	CityTaxCollectable            float64       `json:"city_tax_collectable"`
-	SpecialDistrictTaxableAmount  float64       `json:"special_district_taxable_amount"`
-	SpecialDistrictTaxCollectable float64       `json:"special_district_tax_collectable"`
+	Shipping  Shipping      `json:"shipping"`
+	LineItems []TaxLineItem `json:"line_items"`
+
+	TaxCollectable float64 `json:"tax_collectable"`
+	TaxableAmount  float64 `json:"taxable_amount"`
+
+	// For US transactions
+	StateTaxableAmount    float64 `json:"state_taxable_amount"`
+	StateTaxRate          float64 `json:"state_tax_rate"`
+	StateTaxCollectable   float64 `json:"state_tax_collectable"`
+	CountyTaxableAmount   float64 `json:"county_taxable_amount"`
+	CountyTaxRate         float64 `json:"county_tax_rate"`
+	CountyTaxCollectable  float64 `json:"county_tax_collectable"`
+	CityTaxableAmount     float64 `json:"city_taxable_amount"`
+	CityTaxRate           float64 `json:"city_tax_rate"`
+	CityTaxCollectable    float64 `json:"city_tax_collectable"`
+	SpecialTaxableAmount  float64 `json:"special_district_taxable_amount"`
+	SpecialTaxRate        float64 `json:"special_tax_rate"`
+	SpecialTaxCollectable float64 `json:"special_district_tax_collectable"`
+
+	// For CA transactions
+	GstTaxableAmount  float64 `json:"gst_taxable_amount"`
+	GstTaxCollectable float64 `json:"gst"`
+	GstTaxRate        float64 `json:"gst_tax_rate"`
+	PstTaxableAmount  float64 `json:"pst_taxable_amount"`
+	PstTaxCollectable float64 `json:"pst"`
+	PstTaxRate        float64 `json:"pst_tax_rate"`
+	QstTaxableAmount  float64 `json:"qst_taxable_amount"`
+	QstTaxCollectable float64 `json:"qst"`
+	QstTaxRate        float64 `json:"qst_tax_rate"`
 }
