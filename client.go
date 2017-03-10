@@ -88,7 +88,7 @@ func (c Client) Post(url string, params interface{}) ([]byte, error) {
 	}
 
 	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("error: %s", resp.StatusCode)
+		return nil, fmt.Errorf("error: %d %s", resp.StatusCode, data)
 	}
 
 	return data, err
