@@ -105,6 +105,8 @@ type TaxLineItem struct {
 	SpecialTaxableAmount float64 `json:"special_district_taxable_amount"`
 	SpecialTaxRate       float64 `json:"special_tax_rate"`
 	SpecialAmount        float64 `json:"special_district_amount"`
+	TaxCollectable       float64 `json:"tax_collectable"`
+	TaxableAmount        float64 `json:"taxable_amount"`
 
 	// For CA transactions
 	GstTaxableAmount float64 `json:"gst_taxable_amount"`
