@@ -2,7 +2,7 @@ package taxjar
 
 type Rate struct {
 	Zip                   string  `json:"zip"`
-	State                 string  `json:"state`
+	State                 string  `json:"state"`
 	StateRate             float64 `json:"state_rate,string"`
 	County                string  `json:"county"`
 	CountyRate            float64 `json:"county_rate,string"`
