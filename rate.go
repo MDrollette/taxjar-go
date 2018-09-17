@@ -1,5 +1,6 @@
 package taxjar
 
+// Rate defines the returned object for rate requests
 type Rate struct {
 	Zip                   string  `json:"zip"`
 	State                 string  `json:"state"`
@@ -20,6 +21,7 @@ type Rate struct {
 	FreightTaxable        *bool   `json:"freight_taxable"`
 }
 
+// RateList is the wrapper for the actual rate object
 type RateList struct {
 	Rate Rate `json:"rate"`
 }
@@ -40,7 +42,7 @@ func RateCountry(country string) func(*rateParams) error {
 	}
 }
 
-// RateCountry returns an option which sets the `state` parameter
+// RateState returns an option which sets the `state` parameter
 func RateState(state string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.State = state
@@ -48,7 +50,7 @@ func RateState(state string) func(*rateParams) error {
 	}
 }
 
-// RateCountry returns an option which sets the `city` parameter
+// RateCity returns an option which sets the `city` parameter
 func RateCity(city string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.City = city
@@ -56,7 +58,7 @@ func RateCity(city string) func(*rateParams) error {
 	}
 }
 
-// RateCountry returns an option which sets the `street` parameter
+// RateStreet returns an option which sets the `street` parameter
 func RateStreet(street string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.Street = street
@@ -64,6 +66,7 @@ func RateStreet(street string) func(*rateParams) error {
 	}
 }
 
+// RateService interfaces with the rates part of the API
 type RateService struct {
 	Repository RateRepository
 }
