@@ -49,7 +49,7 @@ func (c Client) Get(url string, queryParams interface{}) ([]byte, error) {
 	}
 
 	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("error: %s", resp.StatusCode)
+		return nil, fmt.Errorf("error: %d, data: %s", resp.StatusCode, data)
 	}
 	return data, err
 }
