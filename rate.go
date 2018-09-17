@@ -53,6 +53,13 @@ func RateCity(city string) func(*rateParams) error {
 	}
 }
 
+func RateStreet(street string) func(*rateParams) error {
+	return func(rp *rateParams) error {
+		rp.Street = street
+		return nil
+	}
+}
+
 type RateService struct {
 	Repository RateRepository
 }
