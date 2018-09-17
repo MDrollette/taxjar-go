@@ -27,6 +27,7 @@ type RateList struct {
 type rateParams struct {
 	Country string `url:"country,omitempty"`
 	Zip     string `url:"-"`
+	State   string `url:"state,omitempty"`
 	City    string `url:"city,omitempty"`
 	Street  string `url:"street,omitempty"`
 }
@@ -34,6 +35,13 @@ type rateParams struct {
 func RateCountry(country string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.Country = country
+		return nil
+	}
+}
+
+func RateState(state string) func(*rateParams) error {
+	return func(rp *rateParams) error {
+		rp.State = state
 		return nil
 	}
 }
