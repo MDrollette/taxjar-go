@@ -32,6 +32,7 @@ type rateParams struct {
 	Street  string `url:"street,omitempty"`
 }
 
+// RateCountry returns an option which sets the `country` parameter
 func RateCountry(country string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.Country = country
@@ -39,6 +40,7 @@ func RateCountry(country string) func(*rateParams) error {
 	}
 }
 
+// RateCountry returns an option which sets the `state` parameter
 func RateState(state string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.State = state
@@ -46,6 +48,7 @@ func RateState(state string) func(*rateParams) error {
 	}
 }
 
+// RateCountry returns an option which sets the `city` parameter
 func RateCity(city string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.City = city
@@ -53,6 +56,7 @@ func RateCity(city string) func(*rateParams) error {
 	}
 }
 
+// RateCountry returns an option which sets the `street` parameter
 func RateStreet(street string) func(*rateParams) error {
 	return func(rp *rateParams) error {
 		rp.Street = street
