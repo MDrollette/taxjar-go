@@ -21,8 +21,8 @@ type Client struct {
 	Taxes      TaxService
 }
 
-func NewClient(token string) *Client {
-	c := &Client{Client: &http.Client{}, token: token, baseUri: "https://api.taxjar.com/v2", Debug: false}
+func NewClient(token, baseUri string) *Client {
+	c := &Client{Client: &http.Client{}, token: token, baseUri: baseUri, Debug: false}
 	c.Setup()
 	return c
 }

@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/MDrollette/taxjar-go"
 )
 
 func main() {
-	c := taxjar.NewClient(os.Getenv("API_TOKEN"))
+	c := taxjar.NewClient(os.Getenv("API_TOKEN"), os.Getenv("API_URL"))
 	c.Debug = true
 
 	// Get rates at specific ZIP with an optional city specifier
