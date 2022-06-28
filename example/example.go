@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	c := taxjar.NewClient(os.Getenv("API_TOKEN"), os.Getenv("API_URL"))
+	c := taxjar.NewClient(os.Getenv("API_TOKEN"), os.Getenv("API_URI"))
 	c.Debug = true
 
 	// Get rates at specific ZIP with an optional city specifier
