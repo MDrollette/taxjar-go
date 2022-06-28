@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/OrderMyGear/taxjar-go"
 )
 
 func main() {
